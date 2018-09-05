@@ -1,1 +1,2 @@
-Joint distribution of number of crossings and longest run.
+Joint distribution of number of crossings and longest run. In addition to files for the planned R package crossrun, the following R workspaces are included here: crsymm, joint distributions for the symmetric case, and cr.6,cr.7, cr.8 and cr.9 with joint distributions for success probabilities 0.6, 0.7, 0.8 and 0.9, respectively. These joint probabilities are made with functions crossrunsymm and crossrunbin, up to sample size 100.
+
