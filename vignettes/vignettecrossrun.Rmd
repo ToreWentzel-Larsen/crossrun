@@ -39,19 +39,36 @@ knitr::opts_chunk$set(
 The setting is defined by a number n of independent observations from a Bernoulli distribution with the same success probability. In statistical process control, our main intended application, this may be the useful observations in a runs plot, recording values above and below a pre-specified median, disregarding any observations equal to the median ([Anhøj (2015)](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0121349)). The focus of the R package `crossrun` is the number C of crossings and the length L of the longest run in such a sequence. A run is a sequence of successes or failures, delimited by a different observation or the start or end of the entire sequence. A crossing is two adjacent different observations. The following figure illustrates runs and crossings in a statistical process control setting, with successes and failures represented by observations above and below the midline, respectively, in n=24 observations:
 
 ```{r preparefig1, echo=FALSE, results="hide", message=FALSE}
-set.seed(83938487)
-values <- runif(24,-1,1)
+set.seed(32)
+y <- rnorm(24)
+x <- seq_along(y)
 ```
 
 ```{r fig1, echo=FALSE, message=FALSE, fig.cap="Figure 1"}
-par(mar=c(bottom=3,left=0,top=0,right=0))
-plot(x=1:24, y=values, axes=FALSE, type="o", 
-     pch=as.character(c(1:9,0,1:9,0:4)), xlab="", ylab="")
-abline(h=0, col="gray40", lwd=2)
-par(mar=c(bottom=5,left=4,top=4,right=2)+.1)
+op <- par(mar = c(bottom = 3,
+                  left = 0,
+                  top = 0,
+                  right = 0
+))
+
+plot(x, y,
+     axes = FALSE,
+     type = "b",
+     pch = '',
+     lwd = 1.5,
+     xlab = "",
+     ylab = ""
+)
+
+lines(x, rep(median(y), 24),
+      col = 'grey40')
+
+text(1:24, y)
+
+par(op)
 ```
 
-In Figure 1 the longest run consists of the first 5 observations below the midline. The second longest run, above the midline, consists of observation 9-12. Thus the length L of the longest run is 5 in this case. The number of crossings of the midline is C=11. 
+In Figure 1 the longest run consists observations 12-16 below the midline. The second longest run, above the midline, consists of observation 4-7. Thus the length L of the longest run is 5 in this case. The number of crossings of the midline is C=11. 
 
 What is computed in the package `crossrun` is the joint distribution of C and L. An article describing the rationale behind these computations is planned and will be announced at the GitHub site for `crossrun` (https://github.com/ToreWentzel-Larsen/crossrun). L and C are integers. L may be any integer between 1, if all subsequent observations are different, and n, if all observations are equal. C may be any integer between 0, if all observations are equal, and n-1 if all subsequent observations are different. Not all combinations of C and L are possible as shown in the following example for n=15 and success probability 1/2:
 
