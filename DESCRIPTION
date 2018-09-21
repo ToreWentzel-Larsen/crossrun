@@ -11,6 +11,7 @@ Description: Joint distribution of number of crossings and the
   conditioning on the position of the first crossing (or none).
 Depends: R (>= 3.5)
 License: GPL-3
+Url: https://github.com/ToreWentzel-Larsen/crossrun
 Encoding: UTF-8
 LazyData: true
 Imports: Rmpfr (>= 0.7-1)
