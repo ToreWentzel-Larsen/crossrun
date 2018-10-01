@@ -15,9 +15,6 @@
 #' In addition cumulative probabilities qt within each row are also included.
 #' @examples
 #' crs10 <- crossrunsymm(nmax=10,printn=TRUE)
-#' \donttest{
-#' crs100 <- crossrunsymm(nmax=10,printn=TRUE) # long runtime
-#' }
 #' @export
 crossrunsymm <- function(nmax = 100, mult = 2, prec = 120,
     printn = FALSE) {
