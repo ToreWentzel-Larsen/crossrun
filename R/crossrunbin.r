@@ -114,8 +114,8 @@ crossrunbin <- function(nmax = 100, prob = 0.5, mult = 2, prec = 120,
 #' and pbt and qbt conditional of starting with a failure, are
 #' included.
 #' @examples
-#' crs30 <- crossrunshift(nmax=30,printn=TRUE)
-#' print(crs30$pt[[30]])
+#' crs20 <- crossrunshift(nmax=20,printn=TRUE)
+#' print(crs20$pt[[20]])
 #' @export
 crossrunshift <- function(nmax = 100, shift = 0, mult = 2, prec = 120,
     printn = FALSE) {
