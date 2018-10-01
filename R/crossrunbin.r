@@ -14,10 +14,6 @@
 #' @examples
 #' crb10.6 <- crossrunbin(nmax=10, prob=.6, printn=TRUE)
 #' print(crb10.6$pt[[10]])
-#' \donttest{
-#' crb100.6 <- crossrunbin(nmax=100, prob=.6, printn=TRUE) # long runtime
-#' print(crb100.6$pt[[100]])
-#' }
 #' @export
 crossrunbin <- function(nmax = 100, prob = 0.5, mult = 2, prec = 120,
     printn = FALSE) {
