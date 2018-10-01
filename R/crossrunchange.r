@@ -20,11 +20,6 @@
 #' prob10 <- c(rep(.5,5),rep(.7,5))
 #' crchange10 <- crossrunchange(nmax=10, prob=prob10,printn=TRUE)
 #' print(crchange10$pt[[10]])
-#' \donttest{
-#' prob100 <- c(rep(.5,50),rep(.7,50))
-#' crchange100 <- crossrunchange(nmax=100, prob=prob100,printn=TRUE) # long runtime
-#' print(crchange100$pt[[100]])
-#' }
 #' @export
 crossrunchange <- function(nmax = 100, prob = rep(0.5, 100), mult = 2,
     prec = 120, printn = FALSE) {
