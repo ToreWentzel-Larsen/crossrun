@@ -164,7 +164,7 @@ clshift <- function(seri, shift = 0, type = 0) {
 #' cl30simbin <- simclbin(nser=30, nsim=100)
 #' mean(cl30simbin$nc0.5) # mean number of crossings, p=0.5
 #' mean(cl30simbin$lr0.9) # mean longest run, p=0.9
-#' \dontrun{
+#' \donttest{
 #' cl30simbin <- simclbin(nser=30) # long runtime
 #' mean(cl30simbin$nc0.5) # mean number of crossings, p=0.5
 #' mean(cl30simbin$lr0.9) # mean longest run, p=0.9
