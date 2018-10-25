@@ -1,4 +1,4 @@
-Package: crossrun2
+Package: crossrun
 Version: 0.1.1
 Title: Joint Distribution of Number of Crossings and Longest Run
 Authors@R: c(person("Tore","Wentzel-Larsen",email="tore.wentzellarsen@gmail.com",role=c("aut","cre")),
