@@ -182,3 +182,35 @@ simclbin <- function(nser = 100, nsim = 1e+05, probs = c(0.5, 0.6, 0.7,
     return(res)
 }
 
+#' Simulation of observations in n=2m independent and
+#' identical continuous variables classified as above or
+#' below the median.
+#' @description Simulation of observations in n=2m independent and
+#' identical continuous variables classified as above or
+#' below the median. The observations are drawn from a standard
+#' normal distruibution, but the results do not depend on the
+#' distribution as long as it is continuous.
+#' @param m1, half the number of observations
+#' @param nsim number of simulations
+#' @return a data frame with the number of crossings cs and
+#' longest run ls in each simulation.
+#' @examples
+#' simcl14 <- simclem(m1=14, nsim=100)
+#' mean(simcl14$cs) # mean number of crossings
+#' mean(simcl14$ls) # mean longest run
+#' @export
+simclem <- function(m1=14, nsim = 1e+05) {
+  n1 <- 2*m1
+  cs <- rep(NA, nsim)
+  ls <- rep(NA, nsim)
+  for (sim in 1:nsim) {
+    series <- stats::rnorm(n1)
+    med <- stats::median(series)
+    above <- as.numeric(series>med)
+    rleabove <- rle(above)$lengths
+    cs[sim] <- length(rleabove) - 1
+    ls[sim] <- max(rleabove)
+  } # end for sim
+  return(data.frame(cs=cs,ls=ls))
+} #end function simclem
+
