@@ -244,9 +244,89 @@ text(x      = 35,
 
 ## Autocorrelated observations
 
-auto
+The functions in the package crossrun assume independent observations. Autocorrelation may lead to false alarms when using the Anhøj rules or variants of them, and it may be of some importance to investigate the extent of this problem. For that purpose we have developed a function `crossrunauto` that finds the joint distribution of C and L in a simple model for an autocorrelated sequence of Bernoulli observations. We first present the model, next we give formulas for the joint distribution in the model, present the function crossrunauto and finally show how the function may be checked by comparison with simulations.
 
+The first observation has a simple Bernoulli distribution, $P (X_1=1)=p, P(X_1=0)=1-p$. We assume that the distribution of each subsequent observation is fully determined by the previous observation. Specifically, stated only for the first two observations we denote $d=P(X_2=0 \mid X_1=1)$, the "down" probability and $u=P(X_2=1 \mid X_1=0)$, the "up" probability, as shown in the following figure. 
 
+```{r echo=FALSE}
+par(mar=c(bottom=0, left=0, top=0, right=0)+.1)
+plot(x=c(0,1), y=c(0,1), col="white", axes=FALSE, xlab="", ylab="")
+within <- .1
+cex1 <- 3
+alength <- .1
+aangle <- 45
+adispl <- .05
+askewred <- .02
+xchange <- .3
+points(x=within,y=within, pch=19)
+points(x=within,y=within, pch=1, cex=cex1)
+points(x=within,y=1-within, pch=19)
+points(x=within,y=1-within, pch=1, cex=cex1)
+points(x=1-within,y=within, pch=19)
+points(x=1-within,y=within, pch=1, cex=cex1)
+points(x=1-within,y=1-within, pch=19)
+points(x=1-within,y=1-within, pch=1, cex=cex1)
+text(x=0,y=1-within,pos=4, labels="p")
+text(x=0,y=within,pos=4, labels="1-p")
+arrows(x0=within+adispl,y0=1-within,
+       x1=1-within-adispl,y1=1-within, length=alength, angle=aangle)
+arrows(x0=within+adispl,y0=within,
+       x1=1-within-adispl,y1=within, length=alength, angle=aangle)
+arrows(x0=within+adispl-askewred,y0=1-within,
+       x1=1-within-adispl+askewred,y1=within, length=alength, angle=aangle)
+arrows(x0=within+adispl-askewred,y0=within,
+       x1=1-within-adispl+askewred,y1=1-within, length=alength, angle=aangle)
+text(x=.5,y=1-within,pos=3, labels="1-d")
+text(x=.5,y=within,pos=1, labels="1-u")
+text(x=xchange,y=1-xchange,pos=3, labels="d")
+text(x=xchange,y=xchange,pos=1, labels="u")
+par(mar=c(bottom=5, left=4, top=4, right=2)+.1)
+```
+
+We first find the condition for the same distribution for all subsequent observations, this will hereafter be assumed. The condition is $P(X_2=1)=p$ which gives $$P(X_2=1 \mid X_1=1) \cdot P(X_1=1) + P(X_2=1 \mid X_1=0) \cdot P(X_1=0)=p$$
+that gives $(1-d)p+u(1-p)=p$ or simplified $pd=(1-p)u$. It is easy to check that the same condition is obtained starting with the equivalent condition $P(X_2=0)=1-p$. This condition represents a line through the origin in the (d,u) plane, with slope $\frac{p}{1-p}$ that is >1 if p>1/2 and <1 if p>1/2. The slope is 1 in the symmetric case p=1/2, in that case the down and up probabilities are equal. 
+
+The condition for independent observations is that $$P(X_2=1 \mid X_1=1)=P(X_2=1 \mid X_1=0), 1-d=u$$
+Together with the constancy condition $pd=(1-p)u$ this gives $d=1-p, u=p$. The autocorrelation k between two subsequent observations, when success is coded as 1 and failure as 0, may be computed as $k=1-\frac{d}{1-p}=1-\frac{u}{p}$. In particular, this is a model in which independence is equivalent to uncorrelated subsequent observations. The justification for this is as follows. $E(X_1X_2)=P(X_1X_2=1)=$ $P(X_1=1,X_2=1)= P(X_1=1) \cdot P(X_2=1 \mid X_1=1)=p \cdot(1-d)$. By the constancy assumption, $\text{Cov} (X_1,X_2)=p(1-d) - p^2=p \cdot (1-p-d)$. Finally, $k=\text{Cov} (X_1,X_2)/(p(1-p))=\frac{1-p-d}{1-p}$  
+
+The main interest in the joint distribution of C and L may be in the symmetric case, but the procedure outlined here is quite general, only assuming the constancy condition. We first investigate the possible values of the down and up probabilities. If p>0.5, the constancy condition $pd=(1-p)u$ means that $d=\frac{1-p}{p}u$. This implies that all values $0 \leq u \leq 1$ of the up probability u are possible, but if u=1 the down probability is $d=\frac{1-p}{p}$ which is the maximum possible value of the down probability if p>1/2. Similarly, if p<0.5 all values $0 \leq u \leq 1$ of the down probability d are possible, but if d=1 the up probability is $u=\frac{p}{1-p}$ which is the maximum possible value of the up probability if p>1/2. In the function \ `crossrunauto` only the unconstrained change probability is included as an argument `changeprob`, this is u if $p \geq 0.5$ and d if p<0.5. The other change probability is then computed from the constancy condition $pd=(1-p)u$.
+
+Concerning the autocorrelation k, all positive values are possible, and positive autocorrelations may be of primary interest in investigations using `crossrunauto`. Negative autocorrelations are also possible, but then some restrictions apply. Specifically it may be shown that the lowest possible autocorrelation is $1-\frac{1}{p}$ if $p \geq .5$ and $1-\frac{1}{1-p}$ if $p < .5$. The justification is as follows. For $p \geq .5$ the up probability u is unrestricted and u=0 corresponds to $k=1-\frac{u}{p}=1$, while u=1 corresponds to $k=1-\frac{u}{p}=1-\frac{1}{p}$. For $p < .5$ the down probability d is unrestricted and d=0 corresponds to $k=1-1-\frac{d}{1-p}=1$, while d=1 corresponds to $k=1-\frac{d}{1-p}=1-\frac{1}{1-p}$. 
+
+The iterative procedure for computing the joint probabilities for C and L in the model defined above is now nearly the same as for independent observations. We still condition on S and F, where S is the first observation. $P_n(S=1)=p, P_N)S=0)=1-p$. And we still partition by the end F of the first crossing, with values $f=2, \ldots , n$ and an additional value 1 conventially definned as no crossing. Then  $$P_n(F=1 \mid S=1)=(1-d)^{n-1}, P_n(F=1 \mid S=0)=(1-u)^{n-1}$$
+and for $f=2, \ldots , n$, $$P_n(F=f \mid S=1)=(1-d)^{f-2} \cdot d$$ $$P_n(F=f \mid S=0)=(1-u)^{f-2} \cdot u$$
+The joint distribution may now be computed by an iterative procedure closely related to the procedure for independent observations, $$P_n (L=l,C=c \mid S=1) = \sum_{f=1}^n P_n(L=l,C=c \mid S=1,F=f) \cdot P_n (F=f \mid S=1)$$ $$P_n (L=l,C=c \mid S=0) = \sum_{f=1}^n P_n(L=l,C=c \mid S=0,F=f) \cdot P_n (F=f \mid S=0)$$
+Here the last factors $P_n (F=f \mid S=1), P_n (F=f \mid S=0)$ are given above, with formulas only slightly different from the independent case. For F=1 (no crossings) the first factor $P_n(L=l,C=c \mid S=1,F=f)$ or $P_n(L=l,C=c \mid S=0,F=f)$ is nonzero only if C=0, L=n when it is 1. For $f=2, \ldots , n$ the first factor $P_n(L=l,C=c \mid S=1,F=f)$ or $P_n(L=l,C=c \mid S=0,F=f)$ is now, exactly as in the independent case, determined by the last n-f+1 observations that still constitute a sequence of the same type as the full sequence, only shorter and conditioned on the opposite starting position. For this argument the constancy assumption is necessary, each observation has the same success probability p. The times representation applies just as in the  independent case and with the same justification.
+
+The function `crossrunauto` has three main arguments. As in the function `crossrunbin` the arguments `nmax` and `prob` are maximum sequence length and success probability. In addition there is an argument `changeprob` which is the unrestricted change probability, the "up" probability u if $p \geq 0.5$ and the down probability if $p<0.5$, this is the probability for a change to the most probable event.  As in `crossrunbin` there are additional arguments for specifying the multiplier and the precision, these should usually be kept at their default values, and an argument `printn` that may be specified as TRUE if progress information during the computation is desired. 
+
+There is a function `simclauto` that stores results of a number of simulations in the model in a data frame. Arguments are sequence length `nser`, the number of simulations `nsim`, and the same arguments `prob` for success probability and `changeprob` for the unrestricted change probability. 
+
+As an example the joint distribution is computed for `nmax=14, p=0.6` and `u=0.5`and then compared with simulations. The cumulative distribution functions based on the joint distributions are  shown with black while the cumulative distribution functions from 100.000 simulations are shown in red.
+
+```{r eval=TRUE, echo=FALSE}
+set.seed(32)
+cra14.6.u.5 <- crossrunauto(nmax=14, prob=0.6, changeprob=.5)$pt
+joint14.6.u.5 <- cra14.6.u.5[[14]]
+sim.14.6.u.5 <- simclauto(nseq=14, prob=0.6, changeprob=0.5)
+# cdf of C compared with simulations:
+plot(x=as.numeric(names(table(sim.14.6.u.5$nc))), 
+     y=(cumsum(cumsumm(joint14.6.u.5)[,14])/sum(joint14.6.u.5))[
+       as.numeric(names(table(sim.14.6.u.5$nc)))+1], type="l", 
+     xlab="C", ylab="CDF C")
+points(x=as.numeric(names(table(sim.14.6.u.5$nc))), type="l", col="red", lty="dotted",
+       y=cumsum(table(sim.14.6.u.5$nc))/sum(table(sim.14.6.u.5$nc)))
+plot(x=as.numeric(names(table(sim.14.6.u.5$lr))), 
+     y=(cumsum(cumsummcol(joint14.6.u.5)[14,])/sum(joint14.6.u.5))[
+       as.numeric(names(table(sim.14.6.u.5$lr)))], type="l", 
+     xlab="L", ylab="CDF L")
+points(x=as.numeric(names(table(sim.14.6.u.5$lr))), type="l", col="red", lty="dotted",
+       y=cumsum(table(sim.14.6.u.5$lr))/sum(table(sim.14.6.u.5$lr)))
+```
+
+## Adjustment of the Anhøj rules
+
+The `crossrun` package has been used to investigate the performance of the Anhøj rules for run charts and also to propose adjustments to the rules ([Jacob Anhøj, Tore Wentzel-Larsen (2020)](https://doi.org/10.1371/journal.pone.0233920)). The procedure is not presented in detail here since the article is written to be intelligible for researchers and practitioners in statistical process control. The two main functions used in the article, `bestbox` and `cutbox`, were presented in the article before inclusion in the package `crossrun`.
 
 ## Conclusions
 
@@ -272,6 +352,8 @@ ACM Trans. Math. Softw. 33 (2): 13. ISSN 0098-3500.
 R package version 0.7-0.
 
 1. Tore Wentzel-Larsen, Jacob Anhøj (2019). [Joint distribution for number of crossings and longest run in independent Bernoulli observations. The R package crossrun.](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0223233). PLoS ONE 14(10):  e0223233.
+
+1. Jacob Anhøj, Tore Wentzel-Larsen (2020). [Smooth operator: Modifying the Anhøj rules to improve runs analysis in statistical process control.](https://doi.org/10.1371/journal.pone.0233920). PLoS ONE 15(6): e0233920. 
 
 ## Appendix: Checking procedures
 
