@@ -78,7 +78,7 @@ C and L are inversely related. All things being equal, when one goes up, the oth
 C and L are integers. C may be any integer between 0, if all observations are equal, and n - 1 if all subsequent observations are different. L may be any integer between 1, if all subsequent observations are different, and n, if all observations are equal. Not all combinations of C and L are possible as shown in the following example for n = 14 and success probability = 0.5.
 
 ```{r symm14, echo=FALSE, message=FALSE}
-library(crossrunmc)
+library(crossrun)
 j14s <- joint14symm
 rownames(j14s)[1] <- "C = 0"
 colnames(j14s)[1] <- "L = 1"
@@ -143,7 +143,7 @@ The function `crossrunem` has arguments `nmax` for maximum sequence length, `pre
 As an illustration, the resulting distribution of C and L is shown below for n=14. Then there are 7 observations on both sides of the empirical median. The number of crossings C may still be as high as n-1=13, but there has to be at least one crossing. Also, the longest run cannot be larger than 7.
 
 ```{r em14tab, echo=FALSE, message=FALSE}
-library(crossrunmc)
+library(crossrun)
 em14 <- joint14em
 knitr::kable(em14, caption = 'Table 3')
 ```
@@ -153,7 +153,7 @@ This table represents the partitioning by C and L of the total number of subsets
 The following diagrams compare the marginal distributions of C and L for n=14 and  for n=60. At least for the marginal distributions the differences seem to be lower for n=60 than for n=14.
 
 ```{r emcomp14, message=FALSE}
-library(crossrunmc)
+library(crossrun)
 j14s <- joint14symm
 j14em <- joint14em
 plot(x      = 0:13,
@@ -198,7 +198,7 @@ text(x      = 9,
 ```
 
 ```{r emcomp60, message=FALSE}
-library(crossrunmc)
+library(crossrun)
 j60s <- joint60symm
 j60em <- joint60em
 plot(x      = 0:59,
@@ -293,7 +293,7 @@ Here the 5 leftmost columns come from exact calculations while the 5 rightmost c
 The iterative computations may also be checked for appreciably higher n. As commented above the row sums in the symmetric case are just the binomial coefficients. The following code checks this fact for n=14.
 
 ```{r bincoeff14, message=FALSE, echo=T}
-library(crossrunmc)
+library(crossrun)
 library(Rmpfr)
 
 bincoeff13           <- Rmpfr::chooseMpfr.all(13) # binomial coefficients, n - 1 = 13
@@ -309,7 +309,7 @@ This check has been repeated for  $n \leq 100$ with full mpfr precision without 
 The results of the iterative procedure may also be checked by results of simulations. The `crossrun` function `simclbin` performs simulations for the number of crossings and the longest run for chosen values of the success probability. Again, computations for substantially longer sequences (n appreciably higher than 14) should use full mpfr precision for the joint distribution. The following code shows the procedure for n = 14 and 10000 simulations and compares the mean of $C \cdot L$ in the simulations with the corresponding mean from the joint distribution p14.6 with success probability 0.6:
 
 ```{r sim14, message=FALSE, echo=T}
-library(crossrunmc)
+library(crossrun)
 set.seed(83938487)
 sim14 <- simclbin(nser = 14, nsim = 10000)
 (matrix(0:13, nrow = 1) %*% p14.6%*% matrix(1:14, ncol = 1)) / 2^13
@@ -319,7 +319,7 @@ mean(sim14$nc0.6 * sim14$lr0.6)
 Here, $C \cdot L$ is just used as an example of a fairly demanding function of the number C of crossing and the longest run L. Again, computations for substantially longer sequences (n appreciably higher than 14) should use full mpfr precision for the joint distribution. Simpler statistics include means and standard deviations of C and L separately. The following shows a graphical comparison of the cumulative distribution functions of C and L based on the joint distribution and the simulations.
 
 ```{r sim14plot, message=FALSE}
-library(crossrunmc)
+library(crossrun)
 plot(x      = as.numeric(names(table(sim14$nc0.6))),
      y      = (cumsum(cumsumm(p14.6)[,14]) /
                  (2^13))[as.numeric(names(table(sim14$nc0.6))) + 1],
@@ -364,10 +364,10 @@ text(x      = 3,
      col    = "red")
 ```
 
-The joint distribution of C and L may also be checked by simulations when the empirical median is used. A function `simclem` repeatedly generates n=2m independent observations from the standard normal, computes their  median and computes C and L from the resulting sequence. The result is an empirical dostribition of C and L among the simulations. The result is illustrated for n=14 and the number of simulations equal to $100 \cdot 1716$ to ease comparison with the exact distribution shown in Table 3 above. In one run the empirical distribution, divided by 100 is as follows
+The joint distribution of C and L may also be checked by simulations when the empirical median is used. A function `simclem` repeatedly generates n=2m independent observations from the standard normal, computes their  median and computes C and L from the resulting sequence. The result is an empirical distribition of C and L among the simulations. The result is illustrated for n=14 and the number of simulations equal to $100 \cdot 1716$ to ease comparison with the exact distribution shown in Table 3 above. In one run the empirical distribution, divided by 100 is as follows
 
 ```{r em14sim, echo=FALSE, message=FALSE}
-library(crossrunmc)
+library(crossrun)
 set.seed(32)
 em14s <- simclem(m1=7, nsim = 171600)
 em14stab <- round(table(em14s)/100,1)
@@ -376,10 +376,10 @@ colnames(em14stab) <- paste0("L=",1:7)
 knitr::kable(em14stab, caption = 'Table 4')
 ```
 
-Generally this is in good agreement with Table 3. For n=60 a figure is more informative, based on the default 10000 simulations
+Generally this is in good agreement with Table 3. For n=60 a figure is more informative, based on the default 10000 simulations and only checking the marginal distributions.
 
 ```{r em60sim, echo=FALSE, message=FALSE}
-library(crossrunmc)
+library(crossrun)
 set.seed(32)
 em60s <- simclem(m1=30)
 em60c <- as.numeric(names(table(em60s$cs)))
