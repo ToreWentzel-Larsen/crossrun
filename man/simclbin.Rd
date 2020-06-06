@@ -4,8 +4,7 @@
 \alias{simclbin}
 \title{Simulation of Independent Bernoulli Observations}
 \usage{
-simclbin(nser = 100, nsim = 1e+05, probs = c(0.5, 0.6, 0.7, 0.8,
-  0.9))
+simclbin(nser = 100, nsim = 1e+05, probs = c(0.5, 0.6, 0.7, 0.8, 0.9))
 }
 \arguments{
 \item{nser}{length of sequence simulated}
@@ -32,9 +31,4 @@ defined by the binomial probabilities assumed.
 cl30simbin <- simclbin(nser=30, nsim=100)
 mean(cl30simbin$nc0.5) # mean number of crossings, p=0.5
 mean(cl30simbin$lr0.9) # mean longest run, p=0.9
-\dontrun{
-cl30simbin <- simclbin(nser=30) # long runtime
-mean(cl30simbin$nc0.5) # mean number of crossings, p=0.5
-mean(cl30simbin$lr0.9) # mean longest run, p=0.9
-}
 }

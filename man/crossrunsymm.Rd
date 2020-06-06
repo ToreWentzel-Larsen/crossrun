@@ -30,7 +30,4 @@ integers for the default value 2 of the multiplier.
 }
 \examples{
 crs10 <- crossrunsymm(nmax=10,printn=TRUE)
-\dontrun{
-crs100 <- crossrunsymm(nmax=10,printn=TRUE) # long runtime
-}
 }

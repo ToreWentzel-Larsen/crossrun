@@ -4,8 +4,13 @@
 \alias{crossrunchange}
 \title{Joint Distribution for Crossings and Runs, Varying Success Probability.}
 \usage{
-crossrunchange(nmax = 100, prob = rep(0.5, 100), mult = 2,
-  prec = 120, printn = FALSE)
+crossrunchange(
+  nmax = 100,
+  prob = rep(0.5, 100),
+  mult = 2,
+  prec = 120,
+  printn = FALSE
+)
 }
 \arguments{
 \item{nmax}{max sequence length.}
@@ -36,9 +41,4 @@ for a multiplier m.
 prob10 <- c(rep(.5,5),rep(.7,5))
 crchange10 <- crossrunchange(nmax=10, prob=prob10,printn=TRUE)
 print(crchange10$pt[[10]])
-\dontrun{
-prob100 <- c(rep(.5,50),rep(.7,50))
-crchange100 <- crossrunchange(nmax=100, prob=prob100,printn=TRUE) # long runtime
-print(crchange100$pt[[100]])
-}
 }

@@ -4,8 +4,7 @@
 \alias{crossrunbin}
 \title{Joint Distribution for Crossings and Runs}
 \usage{
-crossrunbin(nmax = 100, prob = 0.5, mult = 2, prec = 120,
-  printn = FALSE)
+crossrunbin(nmax = 100, prob = 0.5, mult = 2, prec = 120, printn = FALSE)
 }
 \arguments{
 \item{nmax}{max sequence length.}
@@ -31,8 +30,4 @@ for a multiplier m.
 \examples{
 crb10.6 <- crossrunbin(nmax=10, prob=.6, printn=TRUE)
 print(crb10.6$pt[[10]])
-\dontrun{
-crb100.6 <- crossrunbin(nmax=100, prob=.6, printn=TRUE) # long runtime
-print(crb100.6$pt[[100]])
-}
 }
