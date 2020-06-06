@@ -1,13 +1,13 @@
-#' Joint Distribution for Crossings and Runs, aAutocorrelated Sequence
+#' Joint Distribution for Crossings and Runs, Autocorrelated Sequence
 #'
 #' @description Joint probability distribution for the number of crossings
-#' C and the longest run L in a sequence of n  autocorrelated Bernoulli
+#' C and the longest run L in a sequence of n autocorrelated Bernoulli
 #' observations with success probability p. To enhance precision, results
 #' are stored in mpfr arrays and the probabilities are multiplied by
 #' \eqn{m^{n-1}} for a multiplier m.
 #' @param nmax max sequence length.
 #' @param prob success probability p.
-#' @param changeprob unrestricted change probability. If \eqn{p \geg 0.5},
+#' @param changeprob unrestricted change probability. If \eqn{p \ge 0.5},
 #'  probability of changing to success, if not probability of changing to
 #'  failure.
 #' @param mult multiplier for joint probabilities.
@@ -28,6 +28,7 @@
 #' cra10.6.u.5 <- crossrunauto(nmax=10, prob=0.6, changeprob=.5, printn=TRUE)
 #' round(Rmpfr::asNumeric(cr10.6$pt[[10]]),1)
 #' round(Rmpfr::asNumeric(cra10.6.u.5$pt[[10]]),1) # not the same
+#'
 #' @export
 crossrunauto <- function(nmax = 100, prob = 0.5, changeprob = 0.5,
                          mult = 2, prec = 120, printn = FALSE) {
@@ -120,3 +121,53 @@ crossrunauto <- function(nmax = 100, prob = 0.5, changeprob = 0.5,
     return(list(pat = pat, pbt = pbt, pt = pt, qat = qat, qbt = qbt,
                 qt = qt))
 } # end function crossrunauto
+
+#' Simulation with autocorrelation, auxiliary function
+#'
+#' @description Computes C or L in a sequence.
+#'
+#' @param sequ autocorrelated sequence.
+#' @param type what to return.
+#' @return C if type=0, L if type=1.
+#'
+#' @export
+clf <- function(sequ, type=0) {
+    rleser <- rle(sequ)$lengths
+    if (type==0) res <- length(rleser) - 1
+    if (type==1) res <- max(rleser)
+    return(res)
+} # end auxiliary function clf
+
+
+#' function for simulation with autocorrelation
+#'
+#' @description Simulations for C and L based on simulated
+#'  autocorrelated observations.
+#'
+#' @param nseq length n of sequence.
+#' @param nsim number of simulations.
+#' @param prob success probability p.
+#' @param changeprob unrestricted change probability.
+#' @return data frame with nsim rows and variables
+#'  nc number of crossings and lr longest run.
+#'
+#' @export
+simclauto <- function (nseq = 100, nsim = 100000, prob=0.5, changeprob=0.4) {
+    if (prob>=0.5) {
+        upprob <- changeprob
+        downprob <- (1-prob)*upprob/prob
+    } else {
+        downprob <- changeprob
+        upprob <- prob*upprob/(1-prob)
+    } # end setting downprob and upprob
+    un <- data.frame(matrix(stats::runif(nseq*nsim), nrow=nsim))
+    autseq <- data.frame(matrix(rep(0,nseq*nsim), nrow=nsim))
+    autseq[,1] <- as.numeric(un[,1]<=prob)
+    for (nr in 2:nseq) autseq[,nr] <- autseq[,nr-1]*(un[,nr]>=downprob) +
+        (1-autseq[,nr-1])*(un[,nr]<=upprob)
+    res <- data.frame(matrix(rep(NA, 2*nsim), nrow = nsim))
+    names(res) <- c("nc", "lr")
+    res[,1] <- apply(autseq, 1, clf, type=0)
+    res[,2] <- apply(autseq, 1, clf, type=1)
+    return(res)
+} # end function simclauto
