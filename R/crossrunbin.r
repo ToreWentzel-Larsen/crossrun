@@ -101,7 +101,7 @@ crossrunbin <- function(nmax = 100, prob = 0.5, mult = 2, prec = 120,
         qt = qt))
 }
 
-#' wrapper for crossrunbin, succes probability=pnorm(shift).
+#' wrapper for crossrunbin, success probability=pnorm(shift).
 #'
 #' @param nmax max sequence length.
 #' @param shift mean of normal distribution.
