@@ -18,7 +18,7 @@ crossrunauto(
 
 \item{prob}{success probability p.}
 
-\item{changeprob}{unrestricted change probability. If \eqn{p \geg 0.5},
+\item{changeprob}{unrestricted change probability. If \eqn{p \geq 0.5},
 probability of changing to success, if not probability of changing to
 failure.}
 

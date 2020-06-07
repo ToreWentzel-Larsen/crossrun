@@ -7,7 +7,7 @@
 #' \eqn{m^{n-1}} for a multiplier m.
 #' @param nmax max sequence length.
 #' @param prob success probability p.
-#' @param changeprob unrestricted change probability. If \eqn{p \geg 0.5},
+#' @param changeprob unrestricted change probability. If \eqn{p \geq 0.5},
 #'  probability of changing to success, if not probability of changing to
 #'  failure.
 #' @param mult multiplier for joint probabilities.
