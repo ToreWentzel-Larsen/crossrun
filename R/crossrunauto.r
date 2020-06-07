@@ -1,4 +1,4 @@
-#' Joint Distribution for Crossings and Runs, aAutocorrelated Sequence
+#' Joint Distribution for Crossings and Runs, autocorrelated Sequence
 #'
 #' @description Joint probability distribution for the number of crossings
 #' C and the longest run L in a sequence of n  autocorrelated Bernoulli
