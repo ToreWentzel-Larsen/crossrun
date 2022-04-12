@@ -2,7 +2,7 @@
 % Please edit documentation in R/crossrunauto.r
 \name{crossrunauto}
 \alias{crossrunauto}
-\title{Joint Distribution for Crossings and Runs, aAutocorrelated Sequence}
+\title{Joint Distribution for Crossings and Runs, autocorrelated Sequence}
 \usage{
 crossrunauto(
   nmax = 100,
